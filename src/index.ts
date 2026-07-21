@@ -59,7 +59,11 @@ async function startServer(): Promise<void> {
   });
 
   // GraphQL
-  const server = new ApolloServer<Context>({ typeDefs, resolvers });
+  const server = new ApolloServer<Context>({
+  typeDefs,
+  resolvers,
+  introspection: true,
+  });
   await server.start();
   app.use('/graphql', expressMiddleware(server, {
     context: async ({ req }): Promise<Context> => ({ user: req.user as Context['user'] }),
