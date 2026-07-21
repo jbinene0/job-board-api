@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import session from 'express-session';
 import cors from 'cors';
 import { ApolloServer } from '@apollo/server';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { expressMiddleware } from '@as-integrations/express4';
 import MongoStore from 'connect-mongo';
 import connectDB from './config/db';
@@ -60,9 +61,12 @@ async function startServer(): Promise<void> {
 
   // GraphQL
   const server = new ApolloServer<Context>({
-  typeDefs,
-  resolvers,
-  introspection: true,
+    typeDefs,
+    resolvers,
+    introspection: true,
+    plugins: [
+      ApolloServerPluginLandingPageLocalDefault({ embed: true }),
+    ],
   });
   await server.start();
   app.use('/graphql', expressMiddleware(server, {
